@@ -5,3 +5,4 @@ chat_history.json
 resumes/
 outputs/*.json
 *.txt
+analyze_result.json
