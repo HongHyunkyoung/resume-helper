@@ -1,6 +1,3 @@
-# day3_self2_resume_mcp.py
-# Day 3 self2 — /analyze 명령 + 6대 결함 탐지 + JSON 저장
-
 from pathlib import Path
 from pydantic import BaseModel, Field
 
