@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from openai import OpenAI
 from styles import STYLE_PRESETS, list_style_names
+from day5_self1_resume_pipeline import check_blind_risks, format_blind_report
 
 load_dotenv()
 
@@ -85,6 +86,7 @@ def chat_loop() -> None:
             - /style : 사용 가능한 스타일 목록을 봐요.
             - /help : 이 도움말을 다시 볼 수 있어요.
             - /quit : 프로그램을 종료해요.
+            - /blind : 블라인드 채용 위험 표현을 점검해요.
             - 이름, 학교, 연락처 같은 개인정보는 입력하지 마세요.
             """)
             continue
@@ -92,7 +94,15 @@ def chat_loop() -> None:
         elif user_input == "/quit":
             print("자소서 도우미를 종료합니다.")
             break
-        
+        elif user_input == "/blind":  
+            resume_text = input("점검할 자소서를 붙여넣으세요 > ").strip()
+            if not resume_text:
+                print("자소서 내용을 입력해주세요.")
+                continue
+            found = check_blind_risks(resume_text)
+            print(format_blind_report(found))
+            continue
+
         elif user_input.startswith("/style"):
             current_style_key = handle_style_command(user_input, current_style_key)
             continue
@@ -100,6 +110,7 @@ def chat_loop() -> None:
         elif not user_input:
             print("자소서 내용을 입력해주세요.")
             continue
+
         
         # 선택된 스타일의 system 프롬프트 가져오기
         system_prompt = STYLE_PRESETS[current_style_key]["system"]
