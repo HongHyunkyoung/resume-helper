@@ -13,11 +13,6 @@ CHECK_ITEMS =[
     "NCS 직무 키워드 밀도",
 ]
 
-if __name__ == "__main__":
-    print("선택한 검증 항목:")
-    for item in CHECK_ITEMS:
-        print("-", item)
-
 def check_resume_ai_filter(resume_text: str, check_items:list[str]) -> str:
     """선택한 검증 항목을 기준으로 자소서를 점검한다"""
 
