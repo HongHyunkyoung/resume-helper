@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 from styles import STYLE_PRESETS, list_style_names
 from day5_self1_resume_pipeline import check_blind_risks, format_blind_report
+from day3_self2_resume_mcp import analyze_resume, save_analysis
 
 load_dotenv()
 
@@ -84,6 +85,7 @@ def chat_loop() -> None:
             - 자소서 문단을 붙여넣고 Enter를 누르면 첨삭 피드백을 받아요.
             - /style [스타일명] : 첨삭 스타일을 바꿔요. (간결형, 스토리형, 직무맞춤형)
             - /style : 사용 가능한 스타일 목록을 봐요.
+            - /analyze : 자소서 구조, 키워드, 블라인드 위험 표현을 분석해요.
             - /help : 이 도움말을 다시 볼 수 있어요.
             - /quit : 프로그램을 종료해요.
             - /blind : 블라인드 채용 위험 표현을 점검해요.
@@ -101,6 +103,25 @@ def chat_loop() -> None:
                 continue
             found = check_blind_risks(resume_text)
             print(format_blind_report(found))
+            continue
+
+        elif user_input == "/analyze":
+            resume_text = input("분석할 자소서를 붙여넣으세요 > ").strip()
+            if not resume_text:
+                print("자소서 내용을 입력해주세요.")
+                continue
+
+            raw_keywords = input("NCS/JD 키워드 (쉼표 구분, 없으면 Enter) > ").strip()
+            analysis = analyze_resume(resume_text, raw_keywords)
+            save_analysis(analysis)
+
+            print("\n[분석 결과]")
+            print(f"점수: {analysis.score}")
+            print(f"결함: {analysis.defects}")
+            print(f"키워드 매칭: {analysis.keyword_match}")
+            print(f"블라인드 위험: {analysis.blind_violations}")
+            print(f"수정 방향: {analysis.revised_text}")
+            print()
             continue
 
         elif user_input.startswith("/style"):
